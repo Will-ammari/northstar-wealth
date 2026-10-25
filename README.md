@@ -1,15 +1,15 @@
 # Northstar Wealth — Portfolio Tracker
 
 **Talent Syria take-home assessment · 24 October 2026 · Candidate: William Ammari**  
-**Submission:** scoped code prototype + engineering plan + video outline.  
-**Status:** authored and **syntax-checked only**, **NOT** locally integration-tested. This is not production software. [Verification facts](docs/VERIFICATION.md).
+**Submission:** scoped code prototype + engineering plan + candidate-recorded video (record and submit separately).  
+**Status:** locally verified on **24 October 2026** (Windows/XAMPP, MariaDB 10.4.32): 16 Laravel tests passed (34 assertions), frontend lint/typecheck/build passed, and key browser/API flows were exercised. Live OpenAI streaming, remote CI and MySQL 8.4 compatibility remain unverified. **Prototype, not production software.** [Verification facts](docs/VERIFICATION.md).
 
 A permission-aware multi-asset wealth tracking prototype. The central engineering claim is that portfolio data and write operations are governed by **Laravel authorization and database invariants**, including when an AI assistant requests portfolio information. A deliberately bounded scope lets reviewers assess design decisions, data integrity, the front-to-back contract, and AI orchestration rather than feature count.
 
 ## Tech stack / architectural decisions
 
 - **Laravel 12 + PHP 8.2+** for authentication, policy enforcement, application actions, financial invariants, API endpoints and SQL queries.
-- **MySQL 8.4 / InnoDB** for foreign keys, `DECIMAL(24,8)`, enforced `CHECK`s, locks and atomic transactions. No PostgreSQL-specific code.
+- **MySQL 8.4 / InnoDB (target)** for foreign keys, `DECIMAL(24,8)`, enforced `CHECK`s, locks and atomic transactions. Local runtime verification used **MariaDB 10.4.32**; MySQL 8.4 has not been independently run.
 - **Next.js 16 + TypeScript** for responsive dashboard, forms, loading/error states, server-only Backend-for-Frontend (BFF) routes.
 - **Raw OpenAI Responses API with tool calling** (not LangChain) for two **read-only** portfolio tools and response streaming. Zero writable tools.
 - **GitHub Actions** for proposed PHP/MySQL and frontend quality gates; these jobs require a real CI run to establish results.
@@ -25,13 +25,13 @@ A permission-aware multi-asset wealth tracking prototype. The central engineerin
 | Valuations | Latest manual unit mark cached on asset; append-only valuation history. Execution prices never overwrite valuation. |
 | Dashboard | Total, classes, bounded asset list, bounded transaction list, loading, empty/error states. |
 | AI | API-key-gated two-tool LLM loop, pre-authorization + throttle, no arbitrary portfolio/SQL/tool inputs, streamed answer. |
-| Tests | PHP feature tests and CI workflow **written**, not executed in this environment. |
+| Tests | Laravel feature tests **run locally: 16 passed, 34 assertions**. Frontend lint/typecheck/build passed. GitHub Actions workflow is authored but **remote CI has not been verified**. |
 
 **Out of scope:** user self-signup, invitation flow, real trades or execution, market quotes, FX, rebalancing recommendations, realtime collaboration, queues and background market workers. No financial advice.
 
 ## Local setup (needs internet for first dependency install)
 
-**Requirements:** PHP >=8.2 with `pdo_mysql`, `mbstring`, `openssl`, `fileinfo`; Composer 2; Node.js >=20.9; npm; MySQL 8.4 (or Docker Compose); an optional OpenAI API key. There are no `vendor/` or `node_modules/` directories and no generated lockfiles in the archive; generate, verify and commit lockfiles before claiming reproducibility.
+**Requirements:** PHP >=8.2 with `pdo_mysql`, `mbstring`, `openssl`, `fileinfo`; Composer 2; Node.js >=20.9; npm; MySQL 8.4 (or Docker Compose); an optional OpenAI API key. The submission excludes `vendor/` and `node_modules/` but **includes** `backend/composer.lock` and `frontend/package-lock.json`. Use the lockfiles when installing dependencies; reproducibility still requires testing on the destination environment.
 
 **1. Start MySQL:**
 
@@ -88,7 +88,7 @@ cd backend && php artisan test && vendor/bin/pint --test     # optional style ch
 cd ../frontend && npm run typecheck && npm run lint && npm run build
 ```
 
-For local/CI tests, `backend/phpunit.xml` forces DB name `portfolio_test` to avoid destroying demo data. Before local tests, create this separate schema and grant permissions, e.g. `CREATE DATABASE IF NOT EXISTS portfolio_test; GRANT ALL PRIVILEGES ON portfolio_test.* TO 'portfolio'@'%';`. CI provisions a MySQL service automatically. There is **no claim that these runtime jobs already passed**. See [TESTING](docs/TESTING.md) and [VERIFICATION](docs/VERIFICATION.md).
+For local/CI tests, `backend/phpunit.xml` forces DB name `portfolio_test` to avoid destroying demo data. Before local tests, create this separate schema and grant permissions, e.g. `CREATE DATABASE IF NOT EXISTS portfolio_test; GRANT ALL PRIVILEGES ON portfolio_test.* TO 'portfolio'@'%';`. CI provisions a MySQL service automatically. The 24 October **local** Laravel suite passed with 16 tests and 34 assertions, and frontend lint/typecheck/build also passed. Those results do **not** establish a successful remote GitHub Actions run or MySQL 8.4 verification. See [TESTING](docs/TESTING.md) and [VERIFICATION](docs/VERIFICATION.md).
 
 ## Documentation / assessment deliverables
 

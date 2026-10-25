@@ -15,13 +15,13 @@ Build a demonstrable *household* multi-asset portfolio workspace supporting USD-
 
 | Priority | Capability | Status in submitted source | Rationale |
 | --- | --- | --- | --- |
-| P0 | Membership/roles and Laravel policies | Authored, runtime unverified | Tenant isolation is non-negotiable. |
-| P0 | Portfolio asset records + valuations + transactions | Authored, runtime unverified | Demonstrates core domain and data integrity. |
-| P0 | Next.js BFF and usable responsive dashboard | Authored, runtime unverified | End-to-end full-stack experience. |
+| P0 | Membership/roles and Laravel policies | Implemented; local tests and permission demos passed | Tenant isolation is non-negotiable. |
+| P0 | Portfolio asset records + valuations + transactions | Implemented; local tests and manual transactions passed | Demonstrates core domain and data integrity. |
+| P0 | Next.js BFF and usable responsive dashboard | Built successfully; local browser flows verified | End-to-end full-stack experience. |
 | P0 | Written plan + README + evidence/limits | Included | Explicit minimum from assessment. |
 | P0 | 10–15 min screen/voice video | **User must record** | Required deliverable, not generated here. |
 | P1 | Two read-only AI tools with streaming UX | Authored, provider-key integration unverified | Show tool flow without unsafe write permissions. |
-| P1 | MySQL feature tests and CI | Authored, **not executed** | Provide verification path; don't claim green CI. |
+| P1 | SQL feature tests and CI | **16 tests / 34 assertions passed locally on MariaDB 10.4.32**; CI workflow authored, not verified remotely | Preserve a repeatable verification path; do not claim green CI or tested MySQL 8.4. |
 | P2 | AI write tool with confirmation | Deferred | Requires approval UX, abuse tests and step-up auth. |
 | P2 | Async market sync and realtime collaboration | Deferred | External providers, queue semantics and cost distract from P0. |
 | P2 | FX and financial advice | Excluded | Complex domain/compliance/risk not feasible for this prototype. |
@@ -29,7 +29,7 @@ Build a demonstrable *household* multi-asset portfolio workspace supporting USD-
 ## 3. Chosen stack and accountability
 
 - **Laravel 12:** user-authenticated API, Form Requests, Policies, thin Controllers, Actions for mutations, Query objects for reads. Developer's demonstrated strongest area.
-- **MySQL 8.4 InnoDB:** `DECIMAL(24,8)`, unique/foreign/check constraints, transactional atomicity, `SELECT ... FOR UPDATE`. Familiar and fit for current workload; PostgreSQL is an equally legitimate alternative, not a requirement.
+- **MySQL 8.4 InnoDB (target; locally tested with MariaDB 10.4.32):** `DECIMAL(24,8)`, unique/foreign/check constraints, transactional atomicity, `SELECT ... FOR UPDATE`. Familiar and fit for current workload; PostgreSQL is an equally legitimate alternative, not a requirement.
 - **Next.js 16 + TypeScript:** React-based responsive dashboard and server-only BFF; demonstrates the frontend stack listed in vacancy, supported by AI-assisted engineering and code review.
 - **Raw LLM Responses API:** minimum two named tools and streaming response; choosing it instead of LangChain avoids framework cost for only two tools and one short interaction loop. LangChain is separately requested in the job posting and this project does not claim expertise in it.
 - **CI:** GitHub Actions with MySQL service plus PHP and frontend checks. A workflow definition is not evidence of a successful run.
@@ -93,13 +93,13 @@ The provider API key remains server-side. Data is sent to the configured provide
 
 ## 9. Test strategy and acceptance criteria
 
-**Must demonstrate on an installed environment before claiming completion:** clean migration/seed, owner mutation, viewer forbidden mutation with unchanged DB rows, outsider 403, cross-portfolio 404, oversell 422 with unchanged quantity, identical idempotency replay writes once, reuse with altered payload 422, valuation vs execution price separation, assistant authorization and provider streaming, frontend build.
+**Local verification recorded on 24 October 2026:** database migration/seed, owner actions, viewer/outsider permission checks, rejection of overselling, valuation history, assistant authorization tests, and frontend lint/typecheck/build. The Laravel suite reported **16 passing tests and 34 assertions** on MariaDB 10.4.32; a manual oversell showed an error and unchanged state, but its HTTP status was not recorded. Idempotency and cross-portfolio asset isolation were covered in automated tests. **Not demonstrated:** live OpenAI provider calls or streaming, real concurrent DB connections, remote CI, and direct MySQL 8.4 execution. Details: [VERIFICATION](VERIFICATION.md).
 
 Additional necessary before production: concurrent race tests against real MySQL, load benchmarks, user-owned portfolio creation/invitations, migrations with rollback strategy, secrets rotation, observability, market data design, FX precision policies and model response evaluation. This prototype does **not** provide those assurances.
 
 ## 10. Delivery and transparency
 
-Deliver the repository source and this plan, plus a **candidate-recorded video** of 10–15 minutes with real screen and voice. `README.md` explains installation; `docs/VERIFICATION.md` distinguishes static checks from tests that still need running. AI-use disclosure must be truthful, including generated code, the candidate's review and real examples of corrections or failed tests.
+Deliver the repository source and this plan, plus a **candidate-recorded video** of 10–15 minutes with real screen and voice. `README.md` explains installation; `docs/VERIFICATION.md` records local results separately from unverified provider/CI/production scenarios. AI-use disclosure must be truthful, including generated code, the candidate's review and real examples of corrections or failed tests.
 
 ## References
 

@@ -42,4 +42,4 @@ GRANT ALL PRIVILEGES ON portfolio_test.* TO 'portfolio'@'%';
 
 ## مهم جداً
 
-النسخة تم توليدها بمساعدة AI. نجاح الـPHP/TypeScript syntax checks **لا يثبت** تشغيل Laravel، نجاح migrations، TypeScript build أو LLM integration. بعض خطوات التحقق لازم تعملها أنت لأن بيئة الإنشاء ما فيها Composer/MySQL/npm Registry. لا ترفع مستودعاً وتقول إنه جاهز للإنتاج أو أن كل الاختبارات خضراء قبل حصولك على دليل حقيقي. تفاصيل هذا القيد موثّقة بملف `docs/VERIFICATION.md`.
+النسخة صُممت بمساعدة AI، وصارت إلها نتائج تحقق فعلية موثّقة بتاريخ 24-10-2026: نجح 16 اختبار Laravel مع 34 assertion، ونجحت فحوصات Frontend الثلاثة، وتجارب أساسية على المتصفح والـAPI. هالنتائج محلية على MariaDB، وليست دليلاً على نجاح GitHub Actions أو على اختبار MySQL 8.4. اتصال OpenAI الحي والـStreaming ما تم التحقق منهما بسبب عدم توفر API Key. لا ترفع أسرار `.env`، ولا تقدّم المشروع كنظام جاهز للإنتاج.

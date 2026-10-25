@@ -6,8 +6,8 @@ The take-home assessment explicitly values directing **external coding agents** 
 
 - ChatGPT assisted with comparing architecture alternatives, generating code and documentation, rewriting the previous Laravel/PostgreSQL/LangChain proposal to Laravel/MySQL/Raw Responses API, and preparing interview/video scripts.
 - The design intent was guided by the provided candidate CV/engineering review: strong Laravel/SQL/authorization/transactions; limited React/Next.js/LangChain familiarity.
-- Automated checks executed in this authoring environment were **PHP and TS/TSX parser syntax only**. Composer/npm installs, Laravel PHPUnit runtime, actual MySQL integration and OpenAI calls did not complete here.
-- As a consequence, this repo **must be inspected, run and tested by the candidate** before any claim of successful feature behavior, performance or professional mastery.
+- During the initial drafting environment, checks were limited to **PHP and TS/TSX parser syntax**. A subsequent **24 October 2026 local verification** on Windows/XAMPP with MariaDB 10.4.32 recorded Laravel migrations/seeding, **16 passing PHPUnit tests (34 assertions)**, successful frontend lint/typecheck/build, and manual browser/API checks. Live OpenAI calls and streaming were not verified. See `VERIFICATION.md`.
+- The recorded local verification supports only the documented behaviors; the candidate should still understand and reproduce the key demonstrations, and must not claim unverified CI success, MySQL 8.4 compatibility, concurrency safety, live model integration, production readiness, or personal test runs they did not perform.
 
 ## Candidate actions to perform and document truthfully
 

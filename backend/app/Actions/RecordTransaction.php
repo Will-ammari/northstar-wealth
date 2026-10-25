@@ -12,11 +12,6 @@ use Illuminate\Validation\ValidationException;
 
 final class RecordTransaction
 {
-    /**
-     * All quantity arithmetic is DECIMAL inside MySQL, never PHP floats.
-     * Asset row lock serializes changes to one holding. The (portfolio, key) UNIQUE
-     * constraint is the final guard for parallel requests, including different assets.
-     */
     public function execute(Portfolio $portfolio, Asset $asset, User $actor, array $data): PortfolioTransaction
     {
         try {
@@ -25,12 +20,9 @@ final class RecordTransaction
                 if ($existing) {
                     return self::assertMatchingReplay($existing, $asset, $data);
                 }
-
-                // Lock a unique asset row, not a whole portfolio (different assets may update concurrently).
                 $locked = Asset::where('portfolio_id', $portfolio->id)
                     ->whereKey($asset->id)->lockForUpdate()->firstOrFail();
 
-                // This read is AFTER the locking read to see a concurrent commit.
                 $existing = $this->findReplay($portfolio, $data['idempotency_key']);
                 if ($existing) {
                     return self::assertMatchingReplay($existing, $asset, $data);
@@ -55,9 +47,6 @@ final class RecordTransaction
                 ]);
             }, attempts: 3);
         } catch (QueryException $exception) {
-            // A simultaneous request against *another* asset can win the same key.
-            // InnoDB rejects this INSERT; our transaction rolls back its quantity UPDATE.
-            // Re-fetch the committed winner and compare ALL payload fields.
             if ((int) ($exception->errorInfo[1] ?? 0) === 1062) {
                 $existing = $this->findReplay($portfolio, $data['idempotency_key']);
                 if ($existing) {

@@ -1,6 +1,6 @@
 # Video walkthrough — candidate script (target: 12–14 minutes)
 
-**IMPORTANT:** You must personally record a 10–15 minute screen recording with your **own voice**. This document is a guide, **not** a generated video. The assessment requires the candidate to explain what was really built and tested. Replace all `[DEMO ...]` brackets with genuine footage and results. Never read claims of passing tests if those tests were not run successfully on your machine.
+**IMPORTANT:** You must personally record a 10–15 minute screen recording with your **own voice**. This document is a guide, **not** a generated video. The assessment requires the candidate to explain what was really built and tested. Replace all `[DEMO ...]` brackets with genuine footage and results. State only results documented from real runs. The recorded 24 October local verification is summarized below; a new machine or CI run must be described separately.
 
 **Screen setup:** open the repository README, `docs/PLAN.md`, MySQL migration, `RecordTransaction.php`, `PortfolioPolicy.php`, `llm.ts`, `route.ts`, and the running dashboard if available. Keep browser zoom high enough for reviewers to read. Avoid showing `.env` secrets or personal API tokens.
 
@@ -48,7 +48,7 @@ For retries, each portfolio and idempotency key pair must be unique. If the exac
 
 ## 06:05–07:45 — Application demonstration
 
-[DEMO — ONLY IF ACTUALLY RUNNING: login as owner@example.test, show dashboard total and holdings. Add a demo holding or record a small buy and show the updated quantity; then update its valuation and show that the recorded execution price stays the same. If not running, show source plus README and openly say which integration step is still unverified.]
+[DEMO: The 24 October report records owner login, a new holding of 2 units at USD 100, a buy of 3 units (quantity 5), an oversell rejection with unchanged saved state, and editor valuation update/restoration. Reproduce these on screen if the local environment is running. Otherwise show the code and explicitly state that this new demo was not reproduced.]
 
 The dashboard displays the current manually recorded holdings value and asset allocation. These are snapshots, not live market quotes. The interface also shows a bounded recent transaction feed. The Next.js components contain the loading states, mutation form state, and server error feedback. The backend performs validation and controls whether an action is allowed. Hiding a button for a Viewer is only a user-experience detail, not an access-control mechanism.
 
@@ -56,7 +56,7 @@ For the MVP, I bound the assets returned in detail to one hundred rows and the a
 
 ## 07:45–09:20 — Security demonstration
 
-[SHOW PortfolioPolicy. DEMO IF TESTED: viewer login -> direct POST to write endpoint -> 403; show record counts/quantity unchanged. Switch to outsider -> request another portfolio -> 403. Optionally show successful owner write. Do not invent passing output.]
+[SHOW PortfolioPolicy. The 24 October report records Viewer write HTTP 403 and outsider read HTTP 403. Demonstrate again in the currently running app if possible, or identify the outcome as a previously recorded local check rather than fresh footage.]
 
 Here is my most important security boundary. Every portfolio read checks membership, and every write requires an Owner or Editor membership for that exact portfolio. The identity is taken from the authenticated Laravel request, not from a client-supplied user ID. Transactions and valuations also verify that the referenced asset belongs to that portfolio.
 
@@ -74,17 +74,17 @@ There are no AI write tools. I prioritized safely answering portfolio questions 
 
 ## 11:05–12:25 — AI-assisted development and quality
 
-[SHOW docs/AI_USAGE.md, docs/VERIFICATION.md; SHOW REAL terminal/CI results if you obtained them.]
+[SHOW docs/AI_USAGE.md and docs/VERIFICATION.md; show real terminal screenshots or a fresh test command only if available. Do not imply GitHub Actions has passed.]
 
 I used AI assistance to speed up scaffolding and to challenge architectural choices. This was particularly useful on the Next.js and TypeScript portions that were new to me. My engineering responsibility was to set the correctness requirements, keep permissions and database invariants explicit, inspect the generated code and verify the system through tests.
 
-The repository includes Laravel feature tests for role permissions, insufficient holdings, idempotency, cross-portfolio isolation and database-level constraints. GitHub Actions is configured to run backend tests against MySQL, along with frontend checks. I have kept an explicit verification report to avoid claiming a green CI pipeline or live model integration unless there is real evidence from a run. [HERE STATE EXACTLY WHICH TESTS YOU PERSONALLY RAN AND THEIR OUTCOME.]
+The repository includes Laravel feature tests for role permissions, insufficient holdings, idempotency, cross-portfolio isolation and database-level constraints. GitHub Actions is configured to run backend tests against MySQL, along with frontend checks. My verification report records a 24 October local run on MariaDB 10.4.32: 16 Laravel tests passed, with 34 assertions; Next.js lint, TypeScript typecheck and production build also passed; and the main browser and permission scenarios were tested manually. The GitHub Actions workflow exists but was not verified remotely. Live OpenAI API calls and streaming remain unverified without an API key. These results were documented previously; when recording, I should distinguish them from anything I have personally rerun today.
 
 ## 12:25–13:35 — Trade-offs, limits and wrap-up
 
 [SHOW TRADEOFFS.md and TESTING.md.]
 
-There are deliberate limitations. This is not a live broker, does not value assets in multiple currencies, does not reconcile bank balances, and has not been proven under production load. The next steps would be a green reproducible build, concurrency tests using multiple MySQL connections, end-to-end agent tests, API contract generation, pagination and performance profiling. Only after those checks would I consider new product features such as market feeds or real-time collaboration.
+There are deliberate limitations. This is not a live broker, does not value assets in multiple currencies, does not reconcile bank balances, and has not been proven under production load. The next steps would be verifying the reproducible CI build on MySQL 8.4, concurrency tests using multiple database connections, end-to-end agent tests with a valid provider key, API contract generation, pagination and performance profiling. Only after those checks would I consider new product features such as market feeds or real-time collaboration.
 
 The central decision was to make authorization, data integrity and AI tool boundaries explicit while still delivering a full-stack user experience. Thank you for reviewing my assessment. I welcome questions about the trade-offs, known risks and the reasons behind the design.
 

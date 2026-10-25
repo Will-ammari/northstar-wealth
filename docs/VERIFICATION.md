@@ -1,8 +1,10 @@
-﻿# Verification Report
+# Verification Report
 
 **Project:** Northstar Wealth - Wealth Portfolio Tracker  
 **Verification date:** 24 October 2026  
 **Status:** Locally tested prototype, not a production deployment
+
+**Evidence scope:** These are recorded results of the 24 October local run; this documentation reconciliation does not constitute a new test execution. Use this report as the source of truth when other planning notes describe earlier unverified status.
 
 ## Environment
 

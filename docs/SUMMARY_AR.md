@@ -3,7 +3,7 @@
 **المرشح:** William Ammari  
 **المهمة:** Talent Syria — Wealth Portfolio Tracker  
 **التصميم النهائي:** Laravel 12 + MySQL 8.4 + Next.js 16 / TypeScript + OpenAI Responses API Function Calling **بدون LangChain**.  
-**الحالة الصادقة:** المشروع مكتوب ومُنظَّم واجتاز فحص صياغة PHP وTS/TSX؛ **لم يتم التأكد من تشغيله المتكامل** بسبب عدم توفر Composer وpdo_mysql وMySQL ومخازن npm في بيئة الإنشاء. ما زال يحتاج تشغيل واختبار على جهازك قبل وصفه بأنه جاهز.
+**الحالة الفعلية (24 أكتوبر 2026):** تم تشغيل Laravel والواجهة محلياً على Windows/XAMPP مع MariaDB 10.4.32. نجح 16 اختبار Laravel (34 assertion)، ونجحت أوامر `npm run lint` و`npm run typecheck` و`npm run build`، بالإضافة لفحوصات يدوية على الدخول والصلاحيات والمعاملات. لم يتم اختبار OpenAI API المباشر بسبب عدم توفر API Key، ولم يتم التحقق من GitHub Actions أو توافق MySQL 8.4 بشكل مستقل. هذا Prototype وليس نظاماً إنتاجياً.
 
 ## 1. لماذا هذا الاختيار يناسب خبراتك؟
 
@@ -43,7 +43,7 @@
 
 ### E. CI + اختبارات وتوثيق
 
-أضفنا `.github/workflows/ci.yml` لتشغيل اختبارات Laravel على MySQL 8.4 وفحص PHP syntax وTypeScript check وESLint وNext build. أضفنا PHP Feature Tests للصلاحيات والرصيد والـIdempotency وAPI الوكيل وConstraints. **هذه الملفات مكتوبة لكن اختبارات PHPUnit وGitHub Actions لم تُنفّذ في بيئة الإنشاء**. يوجد `scripts/verify-static.sh` وقد نجح مع الكود الحالي؛ فقط للتأكد من صحة الصياغة.
+أُجريت اختبارات Laravel محلياً على MariaDB 10.4.32 بتاريخ 24-10-2026، وكانت النتيجة 16 اختباراً ناجحاً مع 34 assertion. ونجحت فحوصات Frontend الثلاثة (`lint` و`typecheck` و`build`)، وتجارب المتصفح وAPI الموضحة في `VERIFICATION.md`. ملف GitHub Actions موجود لكن لا توجد نتيجة تشغيل CI مؤكدة، كما أن اتصال OpenAI المباشر والـStreaming لم يُختبرا.
 
 ## 3. كيف ترتبط المعمارية بالهدف؟
 
@@ -68,7 +68,7 @@
 
 ## 6. نقاط الضعف والمخاطر المتبقية
 
-هذه ليست نسخة production-tested. لم نثبت الـBuild، ولم نرَ التطبيق في Browser، ولم نختبر 2 concurrent DB connections، ولا خرجنا بنتائج benchmarks، ولا قمنا بPenetration Test. ليس فيها live market data، FX، توصيات استثمار شخصية، أو حسابات عمولات وأرباح محققة، ولا أدوات AI للكتابة، ولا realtime collaboration. عندما يسألوك عن 'Scalable' جاوب: **قابل للتطوير مع نقاط توسّع محددة، وليس مثبتاً تحت حمل إنتاجي حتى نقيسه**.
+هذه نسخة أولية تم تشغيلها واختبار مساراتها الأساسية محلياً، لكن لم يتم اختبار اتصال OpenAI الحقيقي، أو التزامن باستخدام اتصالين منفصلين لقاعدة البيانات، أو النشر الإنتاجي، أو الضغط والأداء. كما لم يتم التحقق من Docker Compose وGitHub Actions وتشغيل MySQL 8.4 مباشرة. لذلك لا نصفها بأنها Production-ready، رغم نجاح البناء والفحوصات المحلية الموثّقة.
 
 ## 7. المطلوب منك قبل إرسال الإيميل
 

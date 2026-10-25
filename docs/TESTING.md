@@ -2,7 +2,7 @@
 
 ## 0. Reporting truthfully
 
-Source **syntax checks have run**, but PHP feature tests, database migrations, frontend typecheck/build and live model calls **have not** been run in the supplied environment. A written CI file is **not** a green CI run. See `VERIFICATION.md`.
+As recorded in `VERIFICATION.md` on **24 October 2026**, Laravel migrations/seeding completed locally; **16 Laravel tests passed with 34 assertions** on MariaDB 10.4.32; `npm run lint`, `npm run typecheck`, and `npm run build` passed; and the main browser/API scenarios were manually exercised. These are recorded results from that local environment, **not tests rerun for this documentation update**. Live OpenAI calls/streaming, remote GitHub Actions CI, MySQL 8.4, Docker Compose and two-connection concurrency were **not** verified. A workflow file is not a green CI run.
 
 ## 1. Static checks possible offline
 
@@ -36,17 +36,19 @@ npm run build
 
 For tests create a **separate** MySQL database `portfolio_test` matching environment variables in `backend/phpunit.xml`/CI. Do not run a destructive test suite against seeded demonstration data; `RefreshDatabase` resets test tables.
 
-## 3. Automated test cases authored
+## 3. Automated test cases authored and run locally (16 passed; 34 assertions)
 
 **`PortfolioSecurityTest`**: viewer cannot modify quantities; outsider cannot see or edit portfolio; owner cannot oversell; identical idempotency replay cannot double-post; cross-portfolio asset returns 404; viewer cannot revalue; trade execution does not rewrite last market mark; editor may revalue with history; conflicting replay fails; unauthenticated user cannot list; viewer can read dashboard.
 
 **`AssistantAuthorizationTest`**: outsider cannot enter paid agent path; viewer may use read-only assistant; unauthenticated requests are rejected.
 
-**`DatabaseInvariantsTest`**: DB-level rejection of negative quantity and mismatched portfolio/asset foreign key (MySQL-only checks).
+**`DatabaseInvariantsTest`**: DB-level rejection of negative quantity and mismatched portfolio/asset foreign key (run with the MySQL database driver against local MariaDB).
 
 **Not yet authored/run:** actual two-connection concurrency race, fake/mock OpenAI Responses payload tests, E2E browser Playwright, scheduled job tests (jobs deliberately excluded), load tests, full accessibility evaluation.
 
 ## 4. Manual demo checklist
+
+`VERIFICATION.md` records the scenarios actually exercised on 24 October. The table below also includes expected outcomes for scenarios that still need a fresh demonstration. The oversell rejection error and unchanged database state were observed, but its HTTP status code was not recorded; do not represent that status code as independently verified.
 
 | Test | How to check | Expected |
 | --- | --- | --- |
